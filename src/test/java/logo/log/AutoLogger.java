@@ -28,7 +28,7 @@ public class AutoLogger {
                 e.printStackTrace();
             }
             PropertyConfigurator.configure(props);
-            logger= org.apache.log4j.Logger.getLogger(T);s
+            logger= org.apache.log4j.Logger.getLogger(T);
             logg = new AutoLogger();
         }
         return logg;

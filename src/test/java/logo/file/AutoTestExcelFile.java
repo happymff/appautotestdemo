@@ -3,14 +3,13 @@ package logo.file;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import jxl.read.biff.BiffException;
+import logo.module.ElementExist;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
-import org.eclipse.jetty.util.IO;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import sun.security.krb5.Config;
 
-import javax.xml.bind.Element;
+import sun.security.krb5.KrbException;
+
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -25,18 +24,18 @@ public class AutoTestExcelFile {
     private HSSFRow row;
     private HSSFCell cell;
     ElementExist el = new ElementExist();
-    public String[] readExcelTitleContent(InputStream is){
+    public String[] readExcelTitleContent(InputStream is) throws KrbException {
         try{
             fileSystem = new POIFSFileSystem(is);
             workbook = new HSSFWorkbook(fileSystem);
         }catch (IOException e){
             e.printStackTrace();
         }
-        sheet = workbook.getSheet(Config.getInstance().getCfg("My"));
+        sheet = workbook.getSheet(logo.module.Config.getInstance().getCfg("My"));
         row = sheet.getRow(0);
         int colNum = row.getPhysicalNumberOfCells();
         String[] title = new String[colNum];
-        for (int i=0; i < colNum; i+=){
+        for (int i=0; i < colNum; i++){
             title[i] = getStringCellValue(row.getCell((short)i));
         }
         return title;
@@ -50,16 +49,16 @@ public class AutoTestExcelFile {
         }catch (IOException e){
             e.printStackTrace();
         }
-        sheet = workbook.getSheet(Config.getInstance().getCfg("My"));
+        sheet = workbook.getSheet(logo.module.Config.getInstance().getCfg("My"));
         int rowNum = sheet.getLastRowNum();
         row = sheet.getRow(0);
         int colNum = row.getPhysicalNumberOfCells();
         String[] title = new String[colNum];
-        for (int i=1; i < colNum; i+=){
+        for (int i=1; i < colNum; i++){
             row = sheet.getRow(i);
             int j =0;
             while (j<colNum){
-                str+ = getStringCellValue(row.getCell((short)j)).trim()+"-";
+                str+= getStringCellValue(row.getCell((short)j)).trim()+"-";
                 j++;
             }
             content.put(i,str);
@@ -116,9 +115,9 @@ public class AutoTestExcelFile {
         }
         return result;
     }
-    public List<String> ReadTitle() throws FileNotFoundException{
+    public List<String> ReadTitle() throws FileNotFoundException, KrbException {
         List<String> list = new ArrayList<String>();
-        InputStream is= new FilterInputStream(Config.getInstance().getCfg("filePath"));
+        InputStream is= new FileInputStream(logo.module.Config.getInstance().getCfg("filepath"));
         AutoTestExcelFile excelReader = new AutoTestExcelFile();
         String [] title =  excelReader.readExcelTitleContent(is);
         System.out.println("获得Excel表格的标题");
@@ -130,29 +129,29 @@ public class AutoTestExcelFile {
     public List<String> ReadContent() throws FileNotFoundException{
         List<String> list = new ArrayList<String>();
         AutoTestExcelFile excelReader = new AutoTestExcelFile();
-        InputStream is2 = new FilterInputStream(Config.getInstance().getCfg("filePath"));
+        InputStream is2 = new FileInputStream(logo.module.Config.getInstance().getCfg("filepath"));
         Map<Integer,  String> map = excelReader.readExcelContent(is2);
-        for (int i =1; i<map.size(); i+=){
+        for (int i =1; i<map.size(); i++){
             list.add(map.get(i));
         }
         return list;
     }
     public String ReadTitleContent(int i, int j) throws BiffException,IOException{
-        InputStream is= new FilterInputStream(Config.getInstance().getCfg("filePath"));
+        InputStream is= new FileInputStream(logo.module.Config.getInstance().getCfg("filepath"));
         try{
          fileSystem = new POIFSFileSystem(is);
          workbook = new HSSFWorkbook(fileSystem);
         }catch (IOException e){
             e.printStackTrace();
         }
-        sheet = workbook.getSheet(Config.getInstance().getCfg("My"));
+        sheet = workbook.getSheet(logo.module.Config.getInstance().getCfg("filepath"));
         row = sheet.getRow(i);
         String content = getStringCellValue(row.getCell((short) j));
         return  content;
     }
     private void saveWorkBook(HSSFWorkbook wb){
         try{
-            FileOutputStream fileOut= new FileOutputStream(Config.getInstance().getCfg("filePath"));
+            FileOutputStream fileOut= new FileOutputStream(logo.module.Config.getInstance().getCfg("filepath"));
             wb.write(fileOut);
         }catch (FileNotFoundException ex){
             System.out.println(ex.getMessage());
@@ -173,26 +172,26 @@ public class AutoTestExcelFile {
     }
     public void WriteTitleContent(int i, short j) throws BiffException,IOException{
         try{
-            InputStream is= new InputStream(Config.getInstance().getCfg("filePath"));
+            InputStream is= new FileInputStream(logo.module.Config.getInstance().getCfg("filepath"));
             fileSystem = new POIFSFileSystem(is);
             workbook =new HSSFWorkbook(fileSystem);
             is.close();
         }catch (IOException e){
             System.out.println(e.getMessage());
         }
-        sheet = workbook.getSheet(Config.getInstance().getCfg("My"));
+        sheet = workbook.getSheet(logo.module.Config.getInstance().getCfg("My"));
         row = sheet.getRow(i);
         HSSFCell cell = getCell(sheet,i,j);
         HSSFRichTextString hts = new HSSFRichTextString(el.result);
-        cell.getCellValue(hts);
+        cell.setCellValue(hts);
         saveWorkBook(workbook);
     }
     public void SetContentInit(short j) throws  BiffException, IOException{
         try{
-            InputStream is= new FileInputStream(Config.getInstance().getCfg("filePath"));
+            InputStream is= new FileInputStream(logo.module.Config.getInstance().getCfg("filepath"));
             Map<Integer,String> map = readExcelContent(is);
-            for (int k =1; k <map.size(); k+=){
-                sheet = workbook.getSheet(Config.getInstance().getCfg("My"));
+            for (int k =1; k <map.size(); k++){
+                sheet = workbook.getSheet(logo.module.Config.getInstance().getCfg("My"));
                 row = sheet.getRow(k);
                 HSSFCell cell= getCell(sheet,k,j);
                 HSSFRichTextString hts = new HSSFRichTextString("");

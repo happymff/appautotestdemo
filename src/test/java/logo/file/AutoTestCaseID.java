@@ -3,8 +3,11 @@ package logo.file;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
 import jxl.read.biff.BiffException;
+import logo.module.ElementExist;
+import logo.module.SlidePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import sun.security.krb5.KrbException;
 
 import java.io.IOException;
 
@@ -14,8 +17,9 @@ import java.io.IOException;
 public class AutoTestCaseID {
     ElementExist el = new ElementExist();
     static AutoTestExcelFile ft = new AutoTestExcelFile();
-    SlidePage sp = new SlidePage();
-    public void TestCaseId(AppiumDriver driver, String id) throws InterruptedException ,BiffException, IOException{
+    //static AutoTestExcelFile ft = new AutoTestExcelFile();
+   SlidePage sp = new SlidePage();
+    public void TestCaseId(AppiumDriver driver, String id) throws InterruptedException, BiffException, IOException, KrbException {
         int i,j,k,l,m,n,o,p,q;
         for(i=0; i<ft.ReadContent().size(); i++){
             if(ft.ReadContent().get(i).contains(id)){
@@ -80,28 +84,28 @@ public class AutoTestCaseID {
                     }
                 }else  if(caseidLocation.equals("By.id")) {
                     if (caseidOperationMethod.equals("sendkeys")) {
-                        el.waitForElementByID(caseidElement, driver);
+                        el.waitForElementById(caseidElement, driver);
                         driver.findElement(By.id(caseidElement)).sendKeys(caseidTestData);
                         if (sleepTime != null && sleepTime.length() != 0) {
                             String stepTime = sleepTime.substring(0, sleepTime.indexOf("."));
                             Thread.sleep(Integer.parseInt(stepTime));
                         }
                     } else if (caseidOperationMethod.equals("click")) {
-                        el.waitForElementByID(caseidElement, driver);
+                        el.waitForElementById(caseidElement, driver);
                         driver.findElement(By.id(caseidElement)).click();
                         if (sleepTime != null && sleepTime.length() != 0) {
                             String stepTime = sleepTime.substring(0, sleepTime.indexOf("."));
                             Thread.sleep(Integer.parseInt(stepTime));
                         }
                     } else if (caseidOperationMethod.equals("swipedown")) {
-                        el.waitForElementByID(caseidElement, driver);
+                        el.waitForElementById(caseidElement, driver);
                         sp.Down_Page(caseidElement, driver);
                         if (sleepTime != null && sleepTime.length() != 0) {
                             String stepTime = sleepTime.substring(0, sleepTime.indexOf("."));
                             Thread.sleep(Integer.parseInt(stepTime));
                         }
                     }else if (caseidOperationMethod.equals("DownPage")) {
-                        el.waitForElementByID(caseidElement, driver);
+                        el.waitForElementById(caseidElement, driver);
                         sp.DownPage(caseidElement, driver);
                         if (sleepTime != null && sleepTime.length() != 0) {
                             String stepTime = sleepTime.substring(0, sleepTime.indexOf("."));
@@ -150,7 +154,7 @@ public class AutoTestCaseID {
                             String stepTime = sleepTime.substring(0, sleepTime.indexOf("."));
                             Thread.sleep(Integer.parseInt(stepTime));
                         }
-                    }else if("failed".equals(el.waitForElementByNameSkip(caseidElement,driver)))){
+                    }else if("failed".equals(el.waitForElementByNameSkip(caseidElement,driver))){
                             continue;
                     }
                 }
@@ -158,7 +162,7 @@ public class AutoTestCaseID {
             if(caseidVerifyData !=null && caseidVerifyData.length()!=0){
                     el.waitForElementByName(caseidVerifyData,driver);
             }
-            for(p=0; p <ft.ReadTitle().size(); P++){
+            for(p=0; p <ft.ReadTitle().size(); p++){
                 if(ft.ReadTitle().get(p).contains("测试结果")){
                     break;
                 }
